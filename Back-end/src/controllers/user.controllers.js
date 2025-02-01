@@ -221,11 +221,28 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
 
 })  
 
+const deleteUser = asyncHandler(async(req,res)=>{
+    const user = await User.findByIdAndDelete(req.user?._id)
+    if(!user){
+        throw new ApiError(404,"user not found")
+    }
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            user,
+            "user deleted successfully"
+        )
+    )
+})
+
 export{
     registeruser,
     loginuser,
     logoutuser,
     changeCurrentPassword,
     upateDetails,
-    refreshAccessToken
+    refreshAccessToken,
+    deleteUser
 }
