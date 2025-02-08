@@ -5,22 +5,25 @@ import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js';
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000'];
+// const allowedOrigins = ['http://localhost:3000'];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  })
-);
-
-app.use(express.json({ limit: '500kb' }));
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (allowedOrigins.includes(origin) || !origin) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookieParser());

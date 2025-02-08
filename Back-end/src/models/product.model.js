@@ -53,7 +53,8 @@ const productSchema = new Schema({
         ref:"User",
     },
     Client:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
     }
 
 },{timestamps:true});

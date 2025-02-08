@@ -237,6 +237,20 @@ const deleteUser = asyncHandler(async(req,res)=>{
     )
 })
 
+const getUsername = asyncHandler(async(req,res)=>{
+    const user = await User.findById(req.user?._id).select("username")
+    console.log(user);
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            user,
+            "username fetched successfully"
+        )
+    )
+})
+
 export{
     registeruser,
     loginuser,
@@ -244,5 +258,6 @@ export{
     changeCurrentPassword,
     upateDetails,
     refreshAccessToken,
-    deleteUser
+    deleteUser,
+    getUsername
 }

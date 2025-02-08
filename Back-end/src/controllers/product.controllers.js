@@ -55,7 +55,7 @@ const registerProduct = asyncHandler(async (req, res) => {
         Quantity,
         Rating,
         Owner: userId,
-        Client: "",
+        Client: null, 
         Image: Image.secure_url,
     })
     const createProduct = await Product.findById(product._id);
@@ -171,9 +171,60 @@ const updateImage = asyncHandler(async (req, res) => {
 
 });
 
-// Delete product to be made in future
+const deleteProduct = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const productId = "67a24ab5c785b229a56d57e5";//!!!!!!!!!!!!!!!! update it when fontend is ready !!!!!!!!!!!!!!!!!!!!!
+    if(!userId){
+        throw new ApiError(400,"User not found");
+    }
+    if(!productId){
+        throw new ApiError(400,"Product not found");
+    }
+    const productOwner = await Product.findOne({_id:productId}).select("Owner");
+    console.log(productOwner);
+    if (userId !== productOwner.Owner) {
+        throw new ApiError(403, "You are not authorized to delete this product");
+    }
+    const product = await Product.findOneAndDelete(
+        {
+            _id:productId,
+            Owner:userId
+        }
+    )
+    if(!product){
+        throw new ApiError(500,"product delete failed due to some internal problem")
+    }
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            product,
+            "product deleted successfully"
+        )
+    )
 
+});
+
+const sell = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    if(!userId){
+        throw new ApiError(400,"User not found");
+    }
+    const product = await Product.find({Owner:userId});
+    if(!product){
+        throw new ApiError(500,"product not found due to some internal problem")
+    }
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            product,
+            "product found successfully"
+        )
+    )
+
+});
 export {registerProduct,
     updateProduct,
     updateImage,
+    deleteProduct,
+    sell
 };
