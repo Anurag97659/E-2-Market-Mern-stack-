@@ -60,7 +60,6 @@ function Dash() {
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            {/* Sidebar (Static) */}
             <div className="w-64 h-screen fixed bg-white shadow-lg p-6 flex flex-col justify-between">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Dashboard</h2>
@@ -86,15 +85,10 @@ function Dash() {
                     Logout
                 </button>
             </div>
-
-            {/* Main Content (Push right to avoid sidebar overlap) */}
             <div className="flex-1 p-8 ml-64">
-                {/* Welcome Section */}
                 <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 text-center">
                     <h2 className="text-3xl font-bold text-gray-800">Welcome, {username}</h2>
                 </div>
-
-                {/* Products Section */}
                 <div className="w-full max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-8">
                     <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
                         Your Products
@@ -107,8 +101,6 @@ function Dash() {
                             + Add Product
                         </Link>
                     </div>
-
-                    {/* Product List */}
                     {sell.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {sell.map((product) => (
