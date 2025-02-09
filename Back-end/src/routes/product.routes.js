@@ -10,8 +10,8 @@ router.route('/registerProduct').post(verifyJWT,upload.fields([
         maxCount: 1
     }
 ]),registerProduct);
-router.route('/updateProduct').post(verifyJWT,updateProduct);
-router.route('/updateImage').post(verifyJWT,upload.fields([{ name: "Image", maxCount: 1 }]),updateImage);
+router.route('/updateProduct/:productId').put(verifyJWT,updateProduct);
+router.route('/updateImage/:productId').put(verifyJWT,upload.fields([{ name: "Image", maxCount: 1 }]),updateImage);
 router.route('/deleteProduct').post(verifyJWT,deleteProduct);
 router.route('/sell').get(verifyJWT,sell);
 
