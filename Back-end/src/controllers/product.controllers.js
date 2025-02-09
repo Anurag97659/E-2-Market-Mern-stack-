@@ -190,9 +190,87 @@ const sell = asyncHandler(async (req, res) => {
     )
 
 });
+
+const search = asyncHandler(async (req, res) => {
+    const { search } = req.query;
+    if (!search) {
+        throw new ApiError(400, "Search query is required");
+    }
+
+    const products = await Product.find({
+        $or: [
+            { Title: { $regex: search, $options: "i" } },
+            { Description: { $regex: search, $options: "i" } },
+            { Category: { $regex: search, $options: "i" } },
+        ],
+    });
+
+    if (!products) {
+        throw new ApiError(404, "No products found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, products, "Products found successfully")
+    );
+});
+
+const removeFromCart = asyncHandler(async (req, res) => {
+    const { productId } = req.body;
+    const userId = req.user._id;
+
+    if (!productId) throw new ApiError(400, "Product ID is required");
+
+    const user = await Product.findByIdAndUpdate( { _id: productId }, { $set: { Client: null } }, { new: true });
+    if (!user) throw new ApiError(500, "Error removing product from cart");
+
+    res.status(200).json(new ApiResponse(200, user, "Product removed from cart successfully"));
+});
+
+const getCartList = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+   
+    const user = await Product.find({Client:userId});
+
+    if (!user) throw new ApiError(404, "User not found");
+
+    res.status(200).json(new ApiResponse(200, user, "Cart list fetched successfully"));
+});
+
+const addToCart = asyncHandler(async (req, res) => {
+    const { productId } = req.body;
+    const userId = req.user.id; 
+
+    if (!productId) {
+        throw new ApiError(400, "Product ID is required");
+    }
+
+    const product = await Product.findByIdAndUpdate(
+        { _id: productId},
+        { $set: { 
+            Client: userId } },
+        { new: true }
+    )
+    if (!product) {
+        throw new ApiError(404, "product not found");
+    }
+    
+    res.status(200).json(
+        new ApiResponse(200, product, "Product added to cart successfully")
+    );
+    
+});
+
+
+
+
 export {registerProduct,
     updateProduct,
     updateImage,
     deleteProduct,
-    sell
+    sell,
+    search,
+    addToCart,
+    removeFromCart,
+    getCartList
+
 };

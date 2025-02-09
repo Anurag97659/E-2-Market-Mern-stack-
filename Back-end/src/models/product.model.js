@@ -4,7 +4,7 @@ const productSchema = new Schema({
     Title:{
         type:String,
         required:true,
-        unique:true,
+        unique:false,
         minlength:3,
         index: true,
         lowercase:true,
@@ -13,7 +13,7 @@ const productSchema = new Schema({
     Description:{
         type:String,
         required:true,
-        unique:true,
+        unique:false,
         minlength:3,
         lowercase:true,
         trim:true
