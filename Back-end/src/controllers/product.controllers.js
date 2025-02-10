@@ -72,8 +72,6 @@ const registerProduct = asyncHandler(async (req, res) => {
 
 });
 
-
-
 const updateProduct = asyncHandler(async (req, res) => {
     const { Title, Description, Price, Category, Quantity, Rating } = req.body;
     const { productId } = req.params; 
@@ -142,7 +140,6 @@ const updateImage = asyncHandler(async (req, res) => {
         new ApiResponse(200, product, "Product image updated successfully")
     );
 });
-
 
 const deleteProduct = asyncHandler(async (req, res) => {
     const userId = req.user._id;
@@ -214,28 +211,6 @@ const search = asyncHandler(async (req, res) => {
     );
 });
 
-const removeFromCart = asyncHandler(async (req, res) => {
-    const { productId } = req.body;
-    const userId = req.user._id;
-
-    if (!productId) throw new ApiError(400, "Product ID is required");
-
-    const user = await Product.findByIdAndUpdate( { _id: productId }, { $set: { Client: null } }, { new: true });
-    if (!user) throw new ApiError(500, "Error removing product from cart");
-
-    res.status(200).json(new ApiResponse(200, user, "Product removed from cart successfully"));
-});
-
-const getCartList = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-   
-    const user = await Product.find({Client:userId});
-
-    if (!user) throw new ApiError(404, "User not found");
-
-    res.status(200).json(new ApiResponse(200, user, "Cart list fetched successfully"));
-});
-
 const addToCart = asyncHandler(async (req, res) => {
     const { productId } = req.body;
     const userId = req.user.id; 
@@ -260,7 +235,27 @@ const addToCart = asyncHandler(async (req, res) => {
     
 });
 
+const removeFromCart = asyncHandler(async (req, res) => {
+    const { productId } = req.body;
+    const userId = req.user._id;
 
+    if (!productId) throw new ApiError(400, "Product ID is required");
+
+    const user = await Product.findByIdAndUpdate( { _id: productId }, { $set: { Client: null } }, { new: true });
+    if (!user) throw new ApiError(500, "Error removing product from cart");
+
+    res.status(200).json(new ApiResponse(200, user, "Product removed from cart successfully"));
+});
+
+const getCartList = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+   
+    const user = await Product.find({Client:userId});
+
+    if (!user) throw new ApiError(404, "User not found");
+
+    res.status(200).json(new ApiResponse(200, user, "Cart list fetched successfully"));
+});
 
 
 export {registerProduct,
